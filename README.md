@@ -1,9 +1,9 @@
 * The following explanation is shown on 4x4, but that is not a limitation:
 
-a\t b\t c\t d\
-e\t f\t g\t h\
-i\t j\t k\t l\
-m\t n\t o\t p\
+a&nbsp; b&nbsp; c&nbsp; d\
+e&nbsp; f&nbsp; g&nbsp; h\
+i&nbsp; j&nbsp; k&nbsp; l\
+m&nbsp; n&nbsp; o&nbsp; p\
 
 
 * All numbers from b to p are set random.
