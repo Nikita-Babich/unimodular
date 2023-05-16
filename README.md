@@ -12,8 +12,8 @@ a*A+-b*B+c*C+-d*D = +-1, first row Laplace expansion (https://en.wikipedia.org/w
 Because of the fact that b up to d are already generated, a is the only unknown.
 Everything aside the first component will be calculated and put into
 
-a*A + R = +-1 \
-a*A = +-1 - R \
+a\*A + R = +-1 \
+a\*A = +-1 - R \
 a = (+-1 - R) / A \
 
 * How will minors be calculated?
