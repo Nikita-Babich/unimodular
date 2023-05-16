@@ -1,15 +1,17 @@
 * The following explanation is shown on 4x4, but that is not a limitation:
 
-a b c d\
-e f g h\
-i j k l\
-m n o p
+a\t b\t c\t d\
+e\t f\t g\t h\
+i\t j\t k\t l\
+m\t n\t o\t p\
+
 
 * All numbers from b to p are set random.
 "a" will be calculated to fit the equation:
 
-a*A+-b*B+c*C+-d*D = +-1, first row Laplace expansion (https://en.wikipedia.org/wiki/Determinant#Laplace_expansion), where A, B, C, D are minors - determinants of smaller matrices.
-Because of the fact that b up to d are already generated, a is the only unknown.
+a\*A+-b\*B+c\*C+-d\*D = +-1 \
+first row Laplace expansion (https://en.wikipedia.org/wiki/Determinant#Laplace_expansion), where A, B, C, D are minors - determinants of smaller matrices.
+Because of the fact that b up to d are already generated, a is the only unknown. \
 Everything aside the first component will be calculated and put into
 
 a\*A + R = +-1 \
