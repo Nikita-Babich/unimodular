@@ -1,8 +1,8 @@
 * The following explanation is shown on 4x4, but that is not a limitation:
 
-a b c d
-e f g h
-i j k l
+a b c d\
+e f g h\
+i j k l\
 m n o p
 
 * All numbers from b to p are set random.
@@ -12,9 +12,9 @@ a*A+-b*B+c*C+-d*D = +-1, first row Laplace expansion (https://en.wikipedia.org/w
 Because of the fact that b up to d are already generated, a is the only unknown.
 Everything aside the first component will be calculated and put into
 
-a*A + R = +-1
-a*A = +-1 - R
-a = (+-1 - R) / A
+a*A + R = +-1 \
+a*A = +-1 - R \
+a = (+-1 - R) / A \
 
 * How will minors be calculated?
 With row reduction the matrix will be converted to upped triagonal form and det will be calculated as multiplication of its diagonal.
