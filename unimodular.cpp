@@ -24,6 +24,17 @@ MAT* mat_create_with_type(unsigned int rows, unsigned int cols){
 	return ptr;
 }
 
+MAT* mat_copy(MAT* mat){
+	//Can ptr still be NULL after typecasting?
+	float* array_ptr = (float*)malloc( sizeof(float) * mat->cols * mat->rows );
+	if( array_ptr == NULL) {return NULL;} //do not create a struct if not enough space for the array
+	MAT* ptr = (MAT*)malloc( sizeof(unsigned int)*2 + sizeof(int) );
+	ptr->rows = rows;
+	ptr->cols = cols;
+	ptr->elem = array_ptr;
+	return ptr;
+}
+
 //MAT* mat_create_by_file(char* filename){
 //	
 //}
@@ -67,9 +78,8 @@ void mat_unit(MAT* mat){
 
 void mat_random(MAT* mat){
 	int length = mat->rows * mat->cols;
-	//printf("%d",length);
 	for(int i=0; i < length; i++){	
-		mat->elem[i] = (float)(rand()/(float)RAND_MAX*2-1);
+		mat->elem[i] =  ((float)rand()) / (float)RAND_MAX * 2 - 1;
 	}
 	return;
 }
@@ -93,6 +103,7 @@ float diag_det(MAT* mat){
 	}
 	return answer;
 }
+
 
 float det(MAT* mat){
 	//must recieve square matrix
