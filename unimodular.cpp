@@ -29,9 +29,9 @@ MAT* mat_copy(MAT* mat){
 	float* array_ptr = (float*)malloc( sizeof(float) * mat->cols * mat->rows );
 	if( array_ptr == NULL) {return NULL;} //do not create a struct if not enough space for the array
 	MAT* ptr = (MAT*)malloc( sizeof(unsigned int)*2 + sizeof(int) );
-	ptr->rows = rows;
-	ptr->cols = cols;
-	ptr->elem = array_ptr;
+	ptr->rows = mat->rows;
+	ptr->cols = mat->cols;
+	ptr->elem = mat->elem;
 	return ptr;
 }
 
@@ -58,6 +58,8 @@ void mat_wipe(MAT* mat){
 	}
 	free(mat->elem);
 	mat->elem = NULL;
+	mat->rows = 0;
+	mat->cols = 0;
 	free(mat);
 	mat = NULL;
 	return;
@@ -85,6 +87,9 @@ void mat_random(MAT* mat){
 }
 
 void mat_print(MAT* mat){
+	if (mat==NULL){
+		print("\n The matrix is already deleted or was never successfully created");
+	}
 	printf("\n Matrix with sizes %d, %d", mat->rows, mat->cols);
 	nl;
 	for(int i=0; i < mat->rows; i++){
@@ -134,6 +139,10 @@ int main(){
 	mat_random(b);
 	mat_print(b);
 	mat_destroy(b);
+	
+	MAT* c = mat_copy(b);
+	mat_print(c);
+	mat_destroy(c);
 	
 		
 }
