@@ -88,7 +88,7 @@ void mat_random(MAT* mat){
 
 void mat_print(MAT* mat){
 	if (mat==NULL){
-		print("\n The matrix is already deleted or was never successfully created");
+		printf("\n The matrix is already deleted or was never successfully created");
 	}
 	printf("\n Matrix with sizes %d, %d", mat->rows, mat->cols);
 	nl;
