@@ -100,7 +100,7 @@ void mat_print(MAT* mat){
 	}
 }
 
-float diag_det(MAT* mat){
+float diag_det(MAT* mat){ //also works for triangular
 	int size = mat->rows;
 	float answer = 1;
 	for(int i = 0; i<size; i++){
@@ -110,23 +110,24 @@ float diag_det(MAT* mat){
 }
 
 
-float det(MAT* mat){
+float det(MAT* mat){ //may be not needed
 	//must recieve square matrix
 	//row reduction algorithm, to upper triangular
-	int size = mat->rows;
+	//int size = mat->rows;
 	//compare each string with 0th (
 	//compare each string from i=2 with i=1
 	//
 	
-	for(int j=0; j<size-1; j++){
+	//for(int j=0; j<size-1; j++){
 		//ELEM(mat,i,j)
 		
 		
-	}
+	//}
 	
 	
-	return diag_det(mat);
+	//return diag_det(mat);
 }
+
 int main(){
 	srand(time(NULL));
 	
