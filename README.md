@@ -21,9 +21,9 @@ The amount of elements under the diagonal (in this case {d, g, h} which we modif
 If we convert from a triangular form back to normal matrix, we would need the same amount of operations, to convert each zero to some number. 
 But zeros can happen in a matrix and we are not obliged to always get rid of them, so we can choose the amount of operations between 0 and (n-1)n/2. 
 This makes matrices with zeros in lower part a bit more likely, but reduces total computation time by 25% in average.
-(n(n+1)/2 + (n-1)n/2 = n(n+1+n-1)/2 = n^2 the amount of manipulations without 25% optimisation.
+n(n+1)/2 + (n-1)n/2 = n(n+1+n-1)/2 = n^2 the amount of manipulations without 25% optimisation.
 But row manipulation is n simple operations.
-(n(n+1)/2 + n(n-1)n/2 = n(n+1+n^2-1)/2 = (n^2+n^3)/2. 
+n(n+1)/2 + n(n-1)n/2 = n(n+1+n^2-1)/2 = (n^2+n^3)/2. 
 # Total time complexity: O(n^3)
 
 
