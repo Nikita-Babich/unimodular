@@ -9,11 +9,14 @@ We will also not use scaling manipulation, because random filling of the upper t
 Filling half of the matrix with random values is O(n^2) [exact: (n*(n+1)/2].  
 
 # Proof that we need O(n^2) manipulations total:
-Let's look at matrix:
-a b c
-d e f
-g h i
-to convert it to triangular form we need 3 operations. Row2 -= Row1 * d/a; Row3 -= Row1 * g/a; Row3 -= Row2 * h/e;
+Let's look at matrix:\
+a b c\
+d e f\
+g h i\
+to convert it to triangular form we need 3 operations.\
+Row2 -= Row1 * d/a;\
+Row3 -= Row1 * g/a;\
+Row3 -= Row2 * h/e;\
 The amount of elements under the diagonal (in this case {d, g, h} which we modify to zero) is (n-1)*n/2.
 If we convert from a triangular form back to normal matrix, we would need the same amount of operations, to convert each zero to some number. 
 But zeros can happen in a matrix and we are not obliged to always get rid of them, so we can choose the amount of operations between 0 and (n-1)*n/2. 
