@@ -6,7 +6,7 @@ Instead of converting a determinant to triagonal form to see what's the determin
 and then make several random row or column additions (https://en.wikipedia.org/wiki/Determinant#Example). That is using the property of determinant:
 adding another row/column multiplied by a nonzero number does not change the determinant. It is always possible to convert to triangular form without row swaps, so, as we a doing a reverse, we will not use swaps.
 We will also not use scaling manipulation, because random filling of the upper triagonal matrix already does the thing of creating any big/small values.
-Filling half of the matrix with random values is O(n^2) [exact: (n*(n+1)/2].  
+Filling half of the matrix with random values is O(n^2) [exact: n(n+1)/2].  
 
 # Proof that we need n^2 manipulations total:
 Let's look at matrix:\

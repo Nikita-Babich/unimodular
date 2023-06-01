@@ -27,7 +27,6 @@ MAT* mat_create_with_type(unsigned int rows, unsigned int cols){
 }
 
 MAT* mat_copy(MAT* mat){
-	//Can ptr still be NULL after typecasting?
 	float* array_ptr = (float*)malloc( sizeof(float) * mat->cols * mat->rows );
 	if( array_ptr == NULL) {return NULL;} //do not create a struct if not enough space for the array
 	MAT* ptr = (MAT*)malloc( sizeof(unsigned int)*2 + sizeof(int) );
@@ -80,12 +79,41 @@ void mat_unit(MAT* mat){
 	return;
 }
 
+void rand_above_diag(MAT* mat){
+	for(int i=0; i < mat->rows; i++){	
+		for(int j=i+1; j < mat->cols; j++){
+			ELEM(mat,i,j) = (float)rand();
+		}
+	}
+	return;
+}
+
 void mat_random(MAT* mat){
 	int length = mat->rows * mat->cols;
 	for(int i=0; i < length; i++){	
 		mat->elem[i] =  ((float)rand()) / (float)RAND_MAX * 2 - 1;
 	}
 	return;
+}
+
+float rand_nonzero_float(void){
+	float result = (float)rand();
+	if( result==0 or result == NULL ){ result = 1; }
+	return result;
+}
+
+MAT* mat_create_triangular_det1(unsigned int rows, unsigned int cols){
+	MAT* ptr = mat_create_with_type(rows, cols)
+	rand_above_diag(ptr);
+	float accumulated_value = 1;
+	float new_rand = 1;
+	for(int i=0; i < mat->rows-1; i++){	
+		new_rand = rand_nonzero_float();
+		accumulated_value *= new_rand;
+		ELEM(ptr,i,i) = new_rand;
+	}
+	ELEM(ptr, mat->rows-1, mat->rows-1) = 1/fabs(accumulated_value);
+	return ptr;
 }
 
 void mat_print(MAT* mat){
@@ -120,14 +148,9 @@ float det(MAT* mat){ //may be not needed
 	//compare each string with 0th (
 	//compare each string from i=2 with i=1
 	//
-	
 	//for(int j=0; j<size-1; j++){
 		//ELEM(mat,i,j)
-		
-		
 	//}
-	
-	
 	//return diag_det(mat);
 }
 
