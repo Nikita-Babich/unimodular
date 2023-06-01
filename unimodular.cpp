@@ -7,6 +7,8 @@
 #define nl printf("\n")
 #define ELEM(mat,i,j) (mat->elem)[i * (mat->cols) + j]
 
+#define DEBUG_MODE
+
 typedef struct{
 	unsigned int rows;
 	unsigned int cols;
@@ -68,7 +70,7 @@ void mat_wipe(MAT* mat){
 void mat_unit(MAT* mat){
 	for(int i=0; i < mat->rows; i++){	
 		for(int j=0; j < mat->cols; j++){
-			if(i==j){
+			if(i!=j){
 				ELEM(mat,i,j) = 0;
 			}else{
 				ELEM(mat,i,j) = 1;
@@ -89,14 +91,15 @@ void mat_random(MAT* mat){
 void mat_print(MAT* mat){
 	if (mat==NULL){
 		printf("\n The matrix is already deleted or was never successfully created");
-	}
-	printf("\n Matrix with sizes %d, %d", mat->rows, mat->cols);
-	nl;
-	for(int i=0; i < mat->rows; i++){
-		for(int j=0; j < mat->cols; j++){
-			printf("\t%+2.2f", ELEM(mat,i,j));
-		}
+	}else{
+		printf("\n Matrix with sizes %d, %d", mat->rows, mat->cols);
 		nl;
+		for(int i=0; i < mat->rows; i++){
+			for(int j=0; j < mat->cols; j++){
+				printf("\t%+2.2f", ELEM(mat,i,j));
+			}
+		nl;
+		}
 	}
 }
 
@@ -147,4 +150,3 @@ int main(){
 	
 		
 }
-
