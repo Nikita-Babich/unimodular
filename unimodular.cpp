@@ -1,5 +1,5 @@
 #include <stdio.h>
-//#include <math.h>
+#include <math.h>
 //#include <string.h>
 #include <stdlib.h>
 #include <time.h>
@@ -14,6 +14,11 @@ typedef struct{
 	unsigned int cols;
 	float* elem;
 }MAT;
+
+typedef struct{
+	unsigned int len;
+	unsigned int* values;
+}INDICES;
 
 MAT* mat_create_with_type(unsigned int rows, unsigned int cols){ 
 	//Can ptr still be NULL after typecasting?
@@ -79,13 +84,22 @@ void mat_unit(MAT* mat){
 	return;
 }
 
-void rand_above_diag(MAT* mat){
+MAT* rand_above_diag(MAT* mat){
 	for(int i=0; i < mat->rows; i++){	
 		for(int j=i+1; j < mat->cols; j++){
 			ELEM(mat,i,j) = (float)rand();
 		}
 	}
-	return;
+	return mat;
+}
+
+MAT* zeros_under_diag(MAT* mat){
+	for(int i=0; i < mat->rows; i++){	
+		for(int j=0; j < i; j++){
+			ELEM(mat,i,j) = 0;
+		}
+	}
+	return mat;
 }
 
 void mat_random(MAT* mat){
@@ -103,16 +117,18 @@ float rand_nonzero_float(void){
 }
 
 MAT* mat_create_triangular_det1(unsigned int rows, unsigned int cols){
-	MAT* ptr = mat_create_with_type(rows, cols)
-	rand_above_diag(ptr);
+	if(rows!=cols){ printf("error"); return NULL; }
+	MAT* ptr = mat_create_with_type(rows, cols);
+	ptr = rand_above_diag(ptr);
+	ptr = zeros_under_diag(ptr);
 	float accumulated_value = 1;
 	float new_rand = 1;
-	for(int i=0; i < mat->rows-1; i++){	
+	for(int i=0; i < ptr->rows-1; i++){	
 		new_rand = rand_nonzero_float();
 		accumulated_value *= new_rand;
 		ELEM(ptr,i,i) = new_rand;
 	}
-	ELEM(ptr, mat->rows-1, mat->rows-1) = 1/fabs(accumulated_value);
+	ELEM(ptr, ptr->rows-1, ptr->rows-1) = 1/fabs(accumulated_value);
 	return ptr;
 }
 
@@ -124,12 +140,14 @@ void mat_print(MAT* mat){
 		nl;
 		for(int i=0; i < mat->rows; i++){
 			for(int j=0; j < mat->cols; j++){
-				printf("\t%+2.2f", ELEM(mat,i,j));
+				printf("\t%+10.2f", ELEM(mat,i,j));
 			}
 		nl;
 		}
 	}
 }
+
+
 
 float diag_det(MAT* mat){ //also works for triangular
 	int size = mat->rows;
@@ -141,7 +159,7 @@ float diag_det(MAT* mat){ //also works for triangular
 }
 
 
-float det(MAT* mat){ //may be not needed
+//float det(MAT* mat){ //may be not needed
 	//must recieve square matrix
 	//row reduction algorithm, to upper triangular
 	//int size = mat->rows;
@@ -152,24 +170,36 @@ float det(MAT* mat){ //may be not needed
 		//ELEM(mat,i,j)
 	//}
 	//return diag_det(mat);
-}
+//}
+
+//MAT* mat_row_operations(){
+//	
+//}
+
+//MAT* mat_rows_shuffle(){
+//	
+//}
 
 int main(){
 	srand(time(NULL));
 	
 	MAT* a = mat_create_with_type(4, 4);
-	//mat_random(a);
+	mat_random(a);
 	mat_print(a);
 	mat_destroy(a);
 	
 	MAT* b = mat_create_with_type(3, 7);
 	mat_random(b);
 	mat_print(b);
-	mat_destroy(b);
+	
 	
 	MAT* c = mat_copy(b);
 	mat_print(c);
 	mat_destroy(c);
+	mat_destroy(b);
 	
+	MAT* d = mat_create_triangular_det1(4,4);
+	mat_print(d);
+	mat_destroy(d);
 		
 }
