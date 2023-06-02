@@ -33,6 +33,6 @@ This is a question similar to sorting, so the apper bound is the same: n log(n).
 n log (n) << n^3 so it does not change the total time complexity.
 Again, we do not have to make all matrices equally likely, we just have to make sure any CAN appear, so the amount of swaps will be random [0 .. n log(n) + 1].
 
-
+For the swap I need "pick 2 from n" random number generator.
 
 
