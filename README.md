@@ -35,4 +35,28 @@ Again, we do not have to make all matrices equally likely, we just have to make 
 
 For the swap I need "pick 2 from n" random number generator.
 
+# Example.
+Given number 3 we will fill the upper part of matrix 3x3 with random floats.\
+0 0.1 -0.3\
+0 0 1.5\
+0 0 0\
+Then the diagonal will be filled with random nonzero numbers, except the last one, which is set to make the diagonal product =1.\
+2 0.1 -0.3\
+0 2 1.5\
+0 0 0.25\
+After that up to (n-1)n/2 row operations. Let's say there were just 2 operations (3)+=(1) and (2)+=2(3).
+2 0.1 -0.3\
+0 2 1.5\
+2 0.1 -0.05\
+-----------\
+2 0.1 -0.3\
+4 2.2 1.4\
+2 0.1 -0.05\
+And a row swap\
+2 0.1 -0.3\
+2 0.1 -0.05\
+4 2.2 1.4\
+It can be checked, that the resulting matrix had a det=-1.
+
+
 
