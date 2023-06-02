@@ -21,16 +21,16 @@ Row3 -= Row2 * h/e;\
 The amount of elements under the diagonal (in this case {d, g, h} which we modify to zero) is (n-1)n/2.
 If we convert from a triangular form back to normal matrix, we would need the same amount of operations, to convert each zero to some number. 
 But zeros can happen in a matrix and we are not obliged to always get rid of them, so we can choose the amount of operations between 0 and (n-1)n/2. 
-This makes matrices with zeros in lower part a bit more likely, but reduces total computation time by 25% in average.
-n(n+1)/2 + (n-1)n/2 = n(n+1+n-1)/2 = n^2 the amount of manipulations without 25% optimisation.
-But row manipulation is n simple operations on numbers.
-n(n+1)/2 + n(n-1)n/2 = n(n+1+n^2-1)/2 = (n^2+n^3)/2. 
+This makes matrices with zeros in lower part a bit more likely, but reduces total computation time by 25% in average.\
+n(n+1)/2 + (n-1)n/2 = n(n+1+n-1)/2 = n^2 the amount of manipulations without 25% optimisation.\
+But row manipulation is n simple operations on numbers.\
+n(n+1)/2 + n(n-1)n/2 = n(n+1+n^2-1)/2 = (n^2+n^3)/2.\
 # Total time complexity: O(n^3)
 
 # How many swaps is needed?
 How many swaps is needed to go from any permutation of row to any other permutation?
-This is a question similar to sorting, so the apper bound is the same: n log(n).
-n log (n) << n^3 so it does not change the total time complexity.
+This is a question similar to sorting, so the apper bound is the same: n log(n).\
+n^2 log (n) << n^3 so it does not change the total time complexity.
 Again, we do not have to make all matrices equally likely, we just have to make sure any CAN appear, so the amount of swaps will be random [0 .. n log(n) + 1].
 
 For the swap I need "pick 2 from n" random number generator.
