@@ -140,7 +140,7 @@ void mat_print(MAT* mat){
 		nl;
 		for(int i=0; i < mat->rows; i++){
 			for(int j=0; j < mat->cols; j++){
-				printf("\t%+10.2f", ELEM(mat,i,j));
+				printf("\t%+10.2e", ELEM(mat,i,j));
 			}
 		nl;
 		}

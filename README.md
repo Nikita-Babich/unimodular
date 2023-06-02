@@ -57,5 +57,10 @@ And a row swap\
 4 2.2 1.4\
 It can be checked, that the resulting matrix had a det=-1.\
 
+# Current problems
+Indices 0,3 an 3,3 create zero elements instead of random.
+Sometimes segfaults.
+First couple elements of the diagonal are so big, that the 1/fabs(accumulated_value) is rounded down to 0.
+
 
 
