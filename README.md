@@ -4,8 +4,9 @@ Create a random square matrix with determinant +-1.
 # Algorithm
 Instead of converting a determinant to triagonal form to see what's the determinant of a given random matrix, we can generate upper triangular matrix, manipulate the last element on the diagonal so the determinant becomes +-1, 
 and then make several random row or column additions (https://en.wikipedia.org/wiki/Determinant#Example). That is using the property of determinant:
-adding another row/column multiplied by a nonzero number does not change the determinant. It is always possible to convert to triangular form without row swaps, so, as we a doing a reverse, we will not use swaps.
-We will also not use scaling manipulation, because random filling of the upper triagonal matrix already does the thing of creating any big/small values.
+adding another row/column multiplied by a nonzero number does not change the determinant. It is always possible to convert to triangular form without row swaps, so, as we a doing a reverse, we will not use swaps. 
+The swaps can be applied just in the end to solve the issue: inability for zeros to appear on the main diagonal.
+We will not use scaling manipulation, because random filling of the upper triagonal matrix already does the thing of creating any big/small values.
 Filling half of the matrix with random values is O(n^2) [exact: n(n+1)/2].  
 
 # Proof that we need n^2 manipulations total:
@@ -22,9 +23,15 @@ If we convert from a triangular form back to normal matrix, we would need the sa
 But zeros can happen in a matrix and we are not obliged to always get rid of them, so we can choose the amount of operations between 0 and (n-1)n/2. 
 This makes matrices with zeros in lower part a bit more likely, but reduces total computation time by 25% in average.
 n(n+1)/2 + (n-1)n/2 = n(n+1+n-1)/2 = n^2 the amount of manipulations without 25% optimisation.
-But row manipulation is n simple operations.
+But row manipulation is n simple operations on numbers.
 n(n+1)/2 + n(n-1)n/2 = n(n+1+n^2-1)/2 = (n^2+n^3)/2. 
 # Total time complexity: O(n^3)
+
+# How many swaps is needed?
+How many swaps is needed to go from any permutation of row to any other permutation?
+This is a question similar to sorting, so the apper bound is the same: n log(n).
+n log (n) << n^3 so it does not change the total time complexity.
+Again, we do not have to make all matrices equally likely, we just have to make sure any CAN appear, so the amount of swaps will be random [0 .. n log(n) + 1].
 
 
 
