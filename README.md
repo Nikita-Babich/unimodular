@@ -28,12 +28,11 @@ n(n+1)/2 + n(n-1)n/2 = n(n+1+n^2-1)/2 = (n^2+n^3)/2.\
 # Total time complexity: O(n^3)
 
 # How many swaps is needed?
-How many swaps is needed to go from any permutation of row to any other permutation?
-This is a question similar to sorting, so the apper bound is the same: n log(n).\
-n^2 log (n) << n^3 so it does not change the total time complexity.
-Again, we do not have to make all matrices equally likely, we just have to make sure any CAN appear, so the amount of swaps will be random [0 .. n log(n) + 1].
+How many swaps is needed to go from any permutation of row to any other permutation?\
+If i swap row indices, it would take n for shuffling and n^2 for filling a new shuffled matrix.\
+n + n^2 << n^3 so it does not change the total time complexity.
 
-For the swap I need "pick 2 from n" random number generator.
+For the swap I need "pick 2 from n" random number generator. Or a whole array of indices shuffle. I need not the amount of swaps to be even.
 
 # Example.
 Given number 3 we will fill the upper part of matrix 3x3 with random floats.\
@@ -56,7 +55,7 @@ And a row swap\
 2 0.1 -0.3\
 2 0.1 -0.05\
 4 2.2 1.4\
-It can be checked, that the resulting matrix had a det=-1.
+It can be checked, that the resulting matrix had a det=-1.\
 
 
 

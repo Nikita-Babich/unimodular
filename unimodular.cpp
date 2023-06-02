@@ -1,6 +1,6 @@
 #include <stdio.h>
 //#include <math.h>
-#include <string.h>
+//#include <string.h>
 #include <stdlib.h>
 #include <time.h>
 
@@ -15,7 +15,7 @@ typedef struct{
 	float* elem;
 }MAT;
 
-MAT* mat_create_with_type(unsigned int rows, unsigned int cols){
+MAT* mat_create_with_type(unsigned int rows, unsigned int cols){ 
 	//Can ptr still be NULL after typecasting?
 	float* array_ptr = (float*)malloc( sizeof(float)*cols*rows );
 	if( array_ptr == NULL) {return NULL;} //do not create a struct if not enough space for the array
@@ -26,7 +26,7 @@ MAT* mat_create_with_type(unsigned int rows, unsigned int cols){
 	return ptr;
 }
 
-MAT* mat_copy(MAT* mat){
+MAT* mat_copy(MAT* mat){ 
 	float* array_ptr = (float*)malloc( sizeof(float) * mat->cols * mat->rows );
 	if( array_ptr == NULL) {return NULL;} //do not create a struct if not enough space for the array
 	MAT* ptr = (MAT*)malloc( sizeof(unsigned int)*2 + sizeof(int) );
@@ -91,7 +91,7 @@ void rand_above_diag(MAT* mat){
 void mat_random(MAT* mat){
 	int length = mat->rows * mat->cols;
 	for(int i=0; i < length; i++){	
-		mat->elem[i] =  ((float)rand()) / (float)RAND_MAX * 2 - 1;
+		mat->elem[i] =  ((float)rand()) / (float)RAND_MAX * 2 - 1; //between -1 and 1
 	}
 	return;
 }
