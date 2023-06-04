@@ -9,16 +9,26 @@
 
 #define DEBUG_MODE
 
-typedef struct{
+typedef struct{ //for matrices
 	unsigned int rows;
 	unsigned int cols;
 	float* elem;
 }MAT;
 
-typedef struct{
+typedef struct{ //for working with row and column indices and optimising row swaps
 	unsigned int len;
 	unsigned int* values;
-}INDICES;
+}ARRAY;
+
+ARRAY* shuffle(ARRAY* array){
+	
+}
+
+ARRAY* create_growing_array(unsigned int max){ //5 -> 0 1 2 3 4
+	ARRAY* ptr = (ARRAY*)malloc( sizeof(unsigned int) + sizeof(int)*max );
+	
+}
+
 
 MAT* mat_create_with_type(unsigned int rows, unsigned int cols){ 
 	//Can ptr still be NULL after typecasting?
