@@ -2,6 +2,19 @@
 Create a random square matrix with determinant +-1.
 
 # Algorithm
+```mermaid
+flowchart TD
+
+Start --> id1(Create a matrix)
+id1 --> id2(Fill numbers under the diagonal with zeros)
+id2 --> id3(Fill numbers above the diagonal with random numbers)
+id3 --> id4(Fill the main diagonal so that the product of the numbers is +-1)
+id4 --> id5(Make 0..(n-1)n/2 random row operations)
+id5 --> id6(Shuffle row indices)
+id6 --> id7(Shuffle column indices)
+id7 --> id8(Refill the matrix according to the new indices)
+```
+
 Instead of converting a determinant to triagonal form to see what's the determinant of a given random matrix, we can generate upper triangular matrix, manipulate the last element on the diagonal so the determinant becomes +-1, 
 and then make several random row or column additions (https://en.wikipedia.org/wiki/Determinant#Example). That is using the property of determinant:
 adding another row/column multiplied by a nonzero number does not change the determinant. It is always possible to convert to triangular form without row swaps, so, as we a doing a reverse, we will not use swaps. 
@@ -23,7 +36,7 @@ If we convert from a triangular form back to normal matrix, we would need the sa
 But zeros can happen in a matrix and we are not obliged to always get rid of them, so we can choose the amount of operations between 0 and (n-1)n/2. 
 This makes matrices with zeros in lower part a bit more likely, but reduces total computation time by 25% in average.\
 n(n+1)/2 + (n-1)n/2 = n(n+1+n-1)/2 = n^2 the amount of manipulations without 25% optimisation.\
-But row manipulation is n simple operations on numbers.\
+! But row manipulation is n simple operations on numbers.\
 n(n+1)/2 + n(n-1)n/2 = n(n+1+n^2-1)/2 = (n^2+n^3)/2.\
 # Total time complexity: O(n^3)
 
