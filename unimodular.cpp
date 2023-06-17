@@ -60,16 +60,18 @@ MAT* mat_create_with_type(unsigned int rows, unsigned int cols){
 
 MAT* mat_copy(MAT* mat){ //
 	float* array_ptr = (float*)malloc( sizeof(float) * mat->cols * mat->rows );
+	/*
 	if( array_ptr == NULL){ //do not create a struct if not enough space for the array
 		return NULL;
 	} 
+	*/
 	MAT* ptr = (MAT*)malloc( sizeof(unsigned int)*2 + sizeof(int) );
 	ptr->rows = mat->rows;
 	ptr->cols = mat->cols;
 	ptr->elem = array_ptr;
 	for( int i = 0; i<ptr->rows; i++){
-		for( int i = 0; i<ptr->cols; i++){
-			ELEM(ptr,i,j) = ELEM(ptr,i,j);
+		for( int j = 0; j<ptr->cols; j++){
+			ELEM(ptr,i,j) = ELEM(mat,i,j);
 		}
 	}
 	return ptr;
@@ -85,9 +87,9 @@ MAT* mat_copy(MAT* mat){ //
 
 void mat_destroy(MAT* mat){
 	free(mat->elem);
-	mat->elem = NULL;
+	//mat->elem = NULL;
 	free(mat);
-	mat = NULL;
+	//mat = NULL;
 	return;
 }
 
@@ -170,7 +172,7 @@ void mat_print(MAT* mat){
 	if (mat==NULL){
 		printf("\n The matrix is already deleted or was never successfully created");
 	}else{
-		printf("\n Matrix with sizes %d, %d", mat->rows, mat->cols);
+		printf("\n Matrix at 0x%.8X with sizes %d, %d", mat, mat->rows, mat->cols);
 		nl;
 		for(int i=0; i < mat->rows; i++){
 			for(int j=0; j < mat->cols; j++){
@@ -225,7 +227,6 @@ int main(){
 	MAT* b = mat_create_with_type(3, 7);
 	mat_random(b);
 	mat_print(b);
-	
 	
 	MAT* c = mat_copy(b);
 	mat_print(c);
