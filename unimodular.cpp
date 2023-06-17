@@ -21,12 +21,26 @@ typedef struct{ //for working with row and column indices and optimising row swa
 }ARRAY;
 
 ARRAY* shuffle(ARRAY* array){
-	
+	int j, buffer;
+	if( array->len > 1){
+		for(int i = 0; i < array->len-1; i++){
+			j = i+1 + rand()%(array->len-1 - i); 
+			/*
+				i+1 because j is at least the next member, 
+				array->len-1 - i is the distance to the end from the first possible j
+			*/
+			buffer = array->values[i];
+			array->values[i] = array->values[j];
+			array->values[j] = buffer;
+		}
+	}
+	return array;
 }
 
 ARRAY* create_growing_array(unsigned int max){ //5 -> 0 1 2 3 4
+	//for saving indices and reshuffling rows and columns
 	ARRAY* ptr = (ARRAY*)malloc( sizeof(unsigned int) + sizeof(int)*max );
-	
+	return ptr;
 }
 
 
@@ -41,13 +55,20 @@ MAT* mat_create_with_type(unsigned int rows, unsigned int cols){
 	return ptr;
 }
 
-MAT* mat_copy(MAT* mat){ 
+MAT* mat_copy(MAT* mat){ //
 	float* array_ptr = (float*)malloc( sizeof(float) * mat->cols * mat->rows );
-	if( array_ptr == NULL) {return NULL;} //do not create a struct if not enough space for the array
+	if( array_ptr == NULL){ //do not create a struct if not enough space for the array
+		return NULL;
+	} 
 	MAT* ptr = (MAT*)malloc( sizeof(unsigned int)*2 + sizeof(int) );
 	ptr->rows = mat->rows;
 	ptr->cols = mat->cols;
-	ptr->elem = mat->elem;
+	ptr->elem = array_ptr;
+	for( int i = 0; i<ptr->rows; i++){
+		for( int i = 0; i<ptr->cols; i++){
+			ELEM(ptr,i,j) = ELEM(ptr,i,j);
+		}
+	}
 	return ptr;
 }
 
