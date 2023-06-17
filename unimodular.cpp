@@ -84,8 +84,13 @@ MAT* mat_shuffle(MAT* origin){
 	int cols = origin->cols;
 	ARRAY* row_indices = shuffle(create_growing_array(rows));
 	ARRAY* col_indices = shuffle(create_growing_array(cols));
-	
-	
+	MAT* result = mat_copy(origin);
+	for(int i = 0; i < rows; i++){
+		for(int j = 0; j < cols; j++){
+			ELEM(result,i,j) = ELEM(origin, (row_indices->values[i]), (col_indices->values[j]) );
+		}
+	}
+	return result;
 }
 
 //MAT* mat_create_by_file(char* filename){
@@ -248,5 +253,12 @@ int main(){
 	MAT* d = mat_create_triangular_det1(4,4);
 	mat_print(d);
 	mat_destroy(d);
+	
+	MAT* e = mat_create_triangular_det1(3,3);
+	mat_print(e);
+	MAT* f = mat_shuffle(e);
+	mat_print(f);
+	mat_destroy(e);
+	mat_destroy(f);
 		
 }
