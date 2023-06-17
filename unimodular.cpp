@@ -20,7 +20,9 @@ typedef struct{ //for working with row and column indices and optimising row swa
 	unsigned int* values;
 }ARRAY;
 
-ARRAY* shuffle(ARRAY* array){
+ARRAY* shuffle(ARRAY* array){ 
+//in place, because is always used in this program 
+//and "not shuffled array of indices" is trivial and meaningless 0 1 2 ..
 	int j, buffer;
 	if( array->len > 1){
 		for(int i = 0; i < array->len-1; i++){
@@ -45,7 +47,6 @@ ARRAY* create_growing_array(unsigned int max){ //5 -> 0 1 2 3 4
 	}
 	return ptr;
 }
-
 
 MAT* mat_create_with_type(unsigned int rows, unsigned int cols){ 
 	//Can ptr still be NULL after typecasting?
@@ -77,6 +78,16 @@ MAT* mat_copy(MAT* mat){ //
 	return ptr;
 }
 
+MAT* mat_shuffle(MAT* origin){ 
+	//return new matrix with rows and cols swaps
+	int rows = origin->rows;
+	int cols = origin->cols;
+	ARRAY* row_indices = shuffle(create_growing_array(rows));
+	ARRAY* col_indices = shuffle(create_growing_array(cols));
+	
+	
+}
+
 //MAT* mat_create_by_file(char* filename){
 //	
 //}
@@ -95,6 +106,10 @@ void mat_destroy(MAT* mat){
 
 void mat_wipe(MAT* mat){
 	//wipe out memory if the data was sensitive
+	/*
+		example of sensitive data: matrix describing orientation of a satellite
+		It can be recognised and recovered from byte-array due to trigonometric properties.
+	*/
 	for(int i=0; i< mat->cols * mat->rows; i++){
 		mat->elem[i] = 0;
 	}
@@ -194,25 +209,22 @@ float diag_det(MAT* mat){ //also works for triangular
 	return answer;
 }
 
-
-//float det(MAT* mat){ //may be not needed
+/*
+float det(MAT* mat){ //may be not needed 
 	//must recieve square matrix
 	//row reduction algorithm, to upper triangular
-	//int size = mat->rows;
-	//compare each string with 0th (
-	//compare each string from i=2 with i=1
-	//
-	//for(int j=0; j<size-1; j++){
-		//ELEM(mat,i,j)
-	//}
-	//return diag_det(mat);
-//}
+	int size = mat->rows;
+	compare each string with 0th (
+	compare each string from i=2 with i=1
+	
+	for(int j=0; j<size-1; j++){
+		ELEM(mat,i,j)
+	}
+	return diag_det(mat);
+}
+*/
 
 //MAT* mat_row_operations(){
-//	
-//}
-
-//MAT* mat_rows_shuffle(){
 //	
 //}
 

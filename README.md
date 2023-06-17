@@ -47,6 +47,7 @@ n + n^2 << n^3 so it does not change the total time complexity.
 
 For the swap I need "pick 2 from n" random number generator. Or a whole array of indices shuffle. I need not the amount of swaps to be even.
 
+# Instead of doing swaps i decided to make a complete shuffle of a matrix. Look into mat_shuffle and shuffle.
 # Example.
 Given number 3 we will fill the upper part of matrix 3x3 with random floats.\
 0 0.1 -0.3\
