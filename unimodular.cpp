@@ -40,6 +40,9 @@ ARRAY* shuffle(ARRAY* array){
 ARRAY* create_growing_array(unsigned int max){ //5 -> 0 1 2 3 4
 	//for saving indices and reshuffling rows and columns
 	ARRAY* ptr = (ARRAY*)malloc( sizeof(unsigned int) + sizeof(int)*max );
+	for( int i = 0; i<max; i++){
+		ptr->values[i]=i;
+	}
 	return ptr;
 }
 
