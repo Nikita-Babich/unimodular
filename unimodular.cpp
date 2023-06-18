@@ -78,6 +78,29 @@ MAT* mat_copy(MAT* mat){ //
 	return ptr;
 }
 
+void mat_add_row_to_row(Mat* origin, int index_modifier, int index_place){
+	// index_modifier - index of the row, which, multiplied by a number, is used to add to row with index "index_place"
+	if(index_modifier >= index_place){
+		return; 
+	}
+	
+}
+MAT* mat_row_operations(MAT* origin){ //modify in place
+/*
+	1 2 3
+	4* 5 6
+	7* 8* 9   *=to base row addition on.
+*/
+	if(origin->cols != origin->rows){
+		return NULL;
+	}
+	for(int i = 1; i< origin->rows; i++){
+		for(int j = 1; j< i; j++){
+			
+		}
+	}
+}
+
 MAT* mat_shuffle(MAT* origin){ 
 	//return new matrix with rows and cols swaps
 	int rows = origin->rows;
