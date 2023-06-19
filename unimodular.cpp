@@ -7,7 +7,7 @@
 #define nl printf("\n")
 #define ELEM(mat,i,j) (mat->elem)[i * (mat->cols) + j]
 
-#define DEBUG_MODE
+#define DEBUG_MODE //prints with __
 
 /* TODO
 	find "index 3,3 = 0" problem
@@ -34,11 +34,11 @@ float rand_nonzero_float(void){ //used at creation and at row operations
 }
 
 ARRAY* shuffle(ARRAY* array){ 
-//in place, because is always used in this program 
+//in place, because there is no case it would not be used
 //and "not shuffled array of indices" is trivial and meaningless 0 1 2 ..
 	int j, buffer;
 	if( array->len > 1){
-		for(int i = 0; i < array->len-1; i++){
+		for(int i = 0; i < (array->len)-1; i++){
 			j = i+1 + rand()%(array->len-1 - i); 
 			/*
 				i+1 because j is at least the next member, 
@@ -49,6 +49,9 @@ ARRAY* shuffle(ARRAY* array){
 			array->values[j] = buffer;
 		}
 	}
+	#ifdef DEBUG_MODE
+		
+	#endif 
 	return array;
 }
 
@@ -58,6 +61,9 @@ ARRAY* create_growing_array(unsigned int max){ //5 -> 0 1 2 3 4
 	for( int i = 0; i<max; i++){
 		ptr->values[i]=i;
 	}
+	#ifdef DEBUG_MODE
+		printf("__first and last elements of index array %d, %d ",ptr->values[0], ptr->values[max-1]);
+	#endif 
 	return ptr;
 }
 
@@ -132,6 +138,7 @@ MAT* mat_shuffle(MAT* origin){ //I think it's smart, keeps the det unchanged (ex
 	ARRAY* row_indices = shuffle(create_growing_array(rows));
 	ARRAY* col_indices = shuffle(create_growing_array(cols));
 	MAT* result = mat_copy(origin);
+	
 	for(int i = 0; i < rows; i++){
 		for(int j = 0; j < cols; j++){
 			ELEM(result,i,j) = ELEM(origin, (row_indices->values[i]), (col_indices->values[j]) );
