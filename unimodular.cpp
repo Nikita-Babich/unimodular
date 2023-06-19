@@ -9,6 +9,12 @@
 
 #define DEBUG_MODE
 
+/* TODO
+	find "index 3,3 = 0" problem
+	find 322 problem (segfault at the last step)
+	remake some functions into "in place"
+*/
+
 typedef struct{ //for matrices
 	unsigned int rows;
 	unsigned int cols;
@@ -93,7 +99,6 @@ MAT* mat_add_row_to_row(MAT* origin, int index_modifier, int index_place){
 	for(int i=0; i< origin->cols; i++){
 		ELEM(origin, index_place, i) = ELEM(origin, index_place, i) + mod*ELEM(origin, index_modifier, i);
 	}
-	
 	return origin;
 }
 MAT* mat_row_operations(MAT* origin){ //modify in place, because mat_add_row_to_row is also in place
