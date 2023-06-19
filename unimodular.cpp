@@ -27,9 +27,10 @@ typedef struct{ //for working with row and column indices and optimising row swa
 }ARRAY;
 
 float rand_nonzero_float(void){ //used at creation and at row operations
-	float result = (float)rand();
+	float result = fmod((float)rand(),10);	//limited by 10 to prevent small number representation problem in division for the last element in mat_create_triangular_det1
 	if( result==0 or result == NULL ){ result = 1; }
-	return result;
+	return result; 
+
 }
 
 ARRAY* shuffle(ARRAY* array){ 
@@ -223,9 +224,15 @@ MAT* mat_create_triangular_det1(unsigned int rows, unsigned int cols){
 	for(int i=0; i < ptr->rows-1; i++){	
 		new_rand = rand_nonzero_float();
 		accumulated_value *= new_rand;
+		#ifdef DEBUG_MODE
+			printf(" %f | %f   ##  \n",accumulated_value, 1.0/accumulated_value);
+		#endif
 		ELEM(ptr,i,i) = new_rand;
 	}
-	ELEM(ptr, ptr->rows-1, ptr->rows-1) = 1/fabs(accumulated_value);
+	ELEM(ptr, (ptr->rows)-1, (ptr->cols)-1) = 1.0/fabs(accumulated_value); //this element is somehow incorrect = 0
+	#ifdef DEBUG_MODE
+		printf(" %f | %f   ##  \n",accumulated_value, 1.0/fabs(accumulated_value)); //but here it is printed correctly
+	#endif
 	return ptr;
 }
 
@@ -239,8 +246,12 @@ void mat_print(MAT* mat){
 			for(int j=0; j < mat->cols; j++){
 				printf("\t%+10.2e", ELEM(mat,i,j));
 			}
-		nl;
+			nl;
 		}
+		for(int i=0; i < mat->rows; i++){
+			printf("__________");
+		}
+		nl;
 	}
 }
 
@@ -277,28 +288,36 @@ float det(MAT* mat){ //may be not needed
 int main(){
 	srand(time(NULL));
 	
+	printf("\n Testing creation and random fill \n");
 	MAT* a = mat_create_with_type(4, 4);
 	mat_random(a);
 	mat_print(a);
 	mat_destroy(a);
 	
+	printf("\n Testing creation of uneven dimensions \n");
 	MAT* b = mat_create_with_type(3, 7);
 	mat_random(b);
 	mat_print(b);
 	
+	printf("\n Testing copy \n");
 	MAT* c = mat_copy(b);
 	mat_print(c);
 	mat_destroy(c);
 	mat_destroy(b);
 	
+	printf("\n Testing creation with det=+-1 \n");
 	MAT* d = mat_create_triangular_det1(4,4);
 	mat_print(d);
 	mat_destroy(d);
 	
+	printf("\n Testing smaller \n");
 	MAT* e = mat_create_triangular_det1(3,3);
 	mat_print(e);
+	
+	printf("\n Testing shuffle \n");
 	MAT* f = mat_shuffle(e);
 	mat_print(f);
+	
 	mat_destroy(e);
 	mat_destroy(f);
 		
