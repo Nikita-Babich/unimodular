@@ -20,6 +20,12 @@ typedef struct{ //for working with row and column indices and optimising row swa
 	unsigned int* values;
 }ARRAY;
 
+float rand_nonzero_float(void){ //used at creation and at row operations
+	float result = (float)rand();
+	if( result==0 or result == NULL ){ result = 1; }
+	return result;
+}
+
 ARRAY* shuffle(ARRAY* array){ 
 //in place, because is always used in this program 
 //and "not shuffled array of indices" is trivial and meaningless 0 1 2 ..
@@ -80,28 +86,37 @@ MAT* mat_copy(MAT* mat){ //
 
 void mat_add_row_to_row(Mat* origin, int index_modifier, int index_place){
 	// index_modifier - index of the row, which, multiplied by a number, is used to add to row with index "index_place"
+	float mod = rand_nonzero_float();
 	if(index_modifier >= index_place){
 		return; 
 	}
-	
+	for(int i=0; i< origin->cols; i++){
+		
+	}
 }
-MAT* mat_row_operations(MAT* origin){ //modify in place
+MAT* mat_row_operations(MAT* origin){ //modify in place, because mat_add_row_to_row is also in place
 /*
 	1 2 3
 	4* 5 6
 	7* 8* 9   *=to base row addition on.
+	Because upper triangular is
+	1 2 3
+	0 5 6
+	0 0 9
 */
 	if(origin->cols != origin->rows){
 		return NULL;
 	}
+	//for each * (zero in the given matrix)
 	for(int i = 1; i< origin->rows; i++){
 		for(int j = 1; j< i; j++){
-			
+			//start a row operation
+			mat_add_row_to_row(origin, j, i);
 		}
 	}
 }
 
-MAT* mat_shuffle(MAT* origin){ 
+MAT* mat_shuffle(MAT* origin){ //I think it's smart, keeps the det unchanged (except of sign)
 	//return new matrix with rows and cols swaps
 	int rows = origin->rows;
 	int cols = origin->cols;
@@ -137,6 +152,7 @@ void mat_wipe(MAT* mat){
 	/*
 		example of sensitive data: matrix describing orientation of a satellite
 		It can be recognised and recovered from byte-array due to trigonometric properties.
+		For example, it's det=1 no matter orientation.
 	*/
 	for(int i=0; i< mat->cols * mat->rows; i++){
 		mat->elem[i] = 0;
@@ -187,12 +203,6 @@ void mat_random(MAT* mat){
 		mat->elem[i] =  ((float)rand()) / (float)RAND_MAX * 2 - 1; //between -1 and 1
 	}
 	return;
-}
-
-float rand_nonzero_float(void){
-	float result = (float)rand();
-	if( result==0 or result == NULL ){ result = 1; }
-	return result;
 }
 
 MAT* mat_create_triangular_det1(unsigned int rows, unsigned int cols){
