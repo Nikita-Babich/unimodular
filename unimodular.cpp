@@ -84,15 +84,17 @@ MAT* mat_copy(MAT* mat){ //
 	return ptr;
 }
 
-void mat_add_row_to_row(Mat* origin, int index_modifier, int index_place){
+MAT* mat_add_row_to_row(MAT* origin, int index_modifier, int index_place){
 	// index_modifier - index of the row, which, multiplied by a number, is used to add to row with index "index_place"
 	float mod = rand_nonzero_float();
 	if(index_modifier >= index_place){
-		return; 
+		return NULL; 
 	}
 	for(int i=0; i< origin->cols; i++){
-		
+		ELEM(origin, index_place, i) = ELEM(origin, index_place, i) + mod*ELEM(origin, index_modifier, i);
 	}
+	
+	return origin;
 }
 MAT* mat_row_operations(MAT* origin){ //modify in place, because mat_add_row_to_row is also in place
 /*
@@ -114,6 +116,7 @@ MAT* mat_row_operations(MAT* origin){ //modify in place, because mat_add_row_to_
 			mat_add_row_to_row(origin, j, i);
 		}
 	}
+	return origin;
 }
 
 MAT* mat_shuffle(MAT* origin){ //I think it's smart, keeps the det unchanged (except of sign)
