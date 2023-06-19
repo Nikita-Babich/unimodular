@@ -26,6 +26,15 @@ typedef struct{ //for working with row and column indices and optimising row swa
 	unsigned int* values;
 }ARRAY;
 
+void print_array(ARRAY* array){
+	nl;
+	for(int i=0; i< array->len; i++){
+		printf(" %d ");
+	}
+	nl;
+	return;
+}
+
 float rand_nonzero_float(void){ //used at creation and at row operations
 	float result = fmod((float)rand(),10);	//limited by 10 to prevent small number representation problem in division for the last element in mat_create_triangular_det1
 	if( result==0 or result == NULL ){ result = 1; }
@@ -37,9 +46,14 @@ ARRAY* shuffle(ARRAY* array){
 //in place, because there is no case it would not be used
 //and "not shuffled array of indices" is trivial and meaningless 0 1 2 ..
 	int j, buffer;
+	#ifdef DEBUG_MODE
+		printf("\n reached\n ");
+	#endif
 	if( array->len > 1){
 		for(int i = 0; i < (array->len)-1; i++){
-			j = i+1 + rand()%(array->len-1 - i); 
+			j = i+1;
+			//j = i+1 + rand()%(array->len-1 - i); //my attampt
+			//j = i + rand() / (RAND_MAX / (array->len - i) + 1); //ok google
 			/*
 				i+1 because j is at least the next member, 
 				array->len-1 - i is the distance to the end from the first possible j
@@ -49,8 +63,8 @@ ARRAY* shuffle(ARRAY* array){
 			array->values[j] = buffer;
 		}
 	}
-	#ifdef DEBUG_MODE
-		
+	#ifdef DEBUG_MODE //not reached
+		print_array(array);
 	#endif 
 	return array;
 }
@@ -131,7 +145,7 @@ MAT* mat_row_operations(MAT* origin){ //modify in place, because mat_add_row_to_
 	return origin;
 }
 
-MAT* mat_shuffle(MAT* origin){ //I think it's smart, keeps the det unchanged (except of sign)
+MAT* mat_shuffle(MAT* origin){ //
 	//return new matrix with rows and cols swaps
 	int rows = origin->rows;
 	int cols = origin->cols;
