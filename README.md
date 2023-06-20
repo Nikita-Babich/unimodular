@@ -2,12 +2,12 @@
 Create a random square matrix with determinant +-1.
 
 #Properties
-1. Due to rounding error the actual determinant values are like this: -1.00003 0.999999 0.999992 0.999984
-2. A matrix with 0 at 0,0 place cannot be generated. But such matrices are "Negligibly small" compared to all unimodular matrices.
+1. Due to rounding error in division the actual determinant values are like this: -1.00003 0.999999 0.999992 0.999984 1. -0.999841
+2. Problem: Saving a struct to file creates an empty file, so #define FILEWORK is used to turn the part of code off.
 
 # Algorithm
 ```mermaid
-flowchart TD
+flowchart LR
 
 Start --> id1(Create a matrix)
 id1 --> id2(Fill numbers under the diagonal with zeros)
