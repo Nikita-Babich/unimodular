@@ -7,7 +7,7 @@
 #define nl printf("\n")
 #define ELEM(mat,i,j) (mat->elem)[i * (mat->cols) + j]
 
-#define DEBUG_MODE //prints with __
+//#define DEBUG_MODE //prints with __
 
 /* TODO
 	find "index 3,3 = 0" problem
@@ -37,7 +37,7 @@ void print_array(ARRAY* array){
 
 float rand_nonzero_float(void){ //used at creation and at row operations
 	float result = fmod((float)rand(),10);	//limited by 10 to prevent small number representation problem in division for the last element in mat_create_triangular_det1
-	if( result==0 or result == NULL ){ result = 1; }
+	if( result==0 ){ result = 1; }
 	return result; 
 
 }
@@ -47,7 +47,7 @@ ARRAY* shuffle(ARRAY* array){
 //and "not shuffled array of indices" is trivial and meaningless 0 1 2 ..
 	int j, buffer;
 	#ifdef DEBUG_MODE
-		printf("\n reached\n ");
+		printf("\n __reached start of shuffle \n ");
 	#endif
 	if( array->len > 1){
 		for(int i = 0; i < (array->len)-1; i++){
@@ -119,9 +119,13 @@ MAT* mat_add_row_to_row(MAT* origin, int index_modifier, int index_place){
 	}
 	for(int i=0; i< origin->cols; i++){
 		ELEM(origin, index_place, i) = ELEM(origin, index_place, i) + mod*ELEM(origin, index_modifier, i);
+		#ifdef DEBUG_MODE
+			printf("__%f ",ELEM(origin, index_place, i));
+		#endif 
 	}
 	return origin;
 }
+
 MAT* mat_row_operations(MAT* origin){ //modify in place, because mat_add_row_to_row is also in place
 /*
 	1 2 3
@@ -130,14 +134,14 @@ MAT* mat_row_operations(MAT* origin){ //modify in place, because mat_add_row_to_
 	Because upper triangular is
 	1 2 3
 	0 5 6
-	0 0 9
+	0 0 9, the indices also happen to describe the needed rows to pass to mat_add_row_to_row(), in this case 2,1  2,0  1,0
 */
 	if(origin->cols != origin->rows){
 		return NULL;
 	}
-	//for each * (zero in the given matrix)
-	for(int i = 1; i< origin->rows; i++){
-		for(int j = 1; j< i; j++){
+	//for each * (zero in the given matrix) lower triangle
+	for(int i = origin->rows-1; i>0; i--){ //row to mod
+		for(int j = 0; j<i ; j++){ //row to mod by
 			//start a row operation
 			mat_add_row_to_row(origin, j, i);
 		}
@@ -169,11 +173,9 @@ MAT* mat_shuffle(MAT* origin){ //
 //	
 //}
 
-void mat_destroy(MAT* mat){
+void mat_destroy(MAT* mat){ //
 	free(mat->elem);
-	//mat->elem = NULL;
 	free(mat);
-	//mat = NULL;
 	return;
 }
 
@@ -335,11 +337,15 @@ int main(){
 	MAT* e = mat_create_triangular_det1(3,3);
 	mat_print(e);
 	
-	printf("\n Testing shuffle \n");
-	MAT* f = mat_shuffle(e);
+	printf("\n Testing row operations \n");
+	MAT* f = mat_row_operations(e); 
 	mat_print(f);
 	
-	mat_destroy(e);
-	mat_destroy(f);
+	printf("\n Testing shuffle \n");
+	//MAT* g = mat_shuffle(f); 
+	//mat_print(g);
+	
+	//mat_destroy(e); 
+	//mat_destroy(f);
 		
 }
