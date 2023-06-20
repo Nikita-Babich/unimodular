@@ -7,12 +7,10 @@
 #define nl printf("\n")
 #define ELEM(mat,i,j) (mat->elem)[i * (mat->cols) + j]
 
-#define DEBUG_MODE //prints with __
+#define DEBUG_MODE 
 
 /* TODO
-	find "index 3,3 = 0" problem
-	find 322 problem (segfault at the last step)
-	remake some functions into "in place"
+
 */
 
 typedef struct{ //for matrices
@@ -23,21 +21,22 @@ typedef struct{ //for matrices
 
 typedef struct{ //for working with row and column indices and optimising row swaps
 	unsigned int len;
-	unsigned int* values;
+	unsigned int values[];
 }ARRAY;
 
 void print_array(ARRAY* array){
 	nl;
-	for(int i=0; i< array->len; i++){
-		printf(" %d ");
+	for(int i=0; i< (array->len); i++){
+		printf(" %d ", array->values[i]);
 	}
 	nl;
 	return;
 }
 
 float rand_nonzero_float(void){ //used at creation and at row operations
-	float result = fmod((float)rand(),10.0) * (rand()%2 ? 1 : -1);	
+	//float result = fmod((float)rand(),10.0) * (rand()%2 ? 1 : -1);	
 	//limited by 10 to prevent small number representation problem in division for the last element in mat_create_triangular_det1
+	float result = (float)rand()/(float)(RAND_MAX/10.0); //from 0 to a
 	if( result==0 ){ 
 		result = 1; 
 	}
@@ -47,19 +46,21 @@ float rand_nonzero_float(void){ //used at creation and at row operations
 ARRAY* shuffle(ARRAY* array){ 
 //in place, because there is no case it would not be used
 //and "not shuffled array of indices" is trivial and meaningless 0 1 2 ..
-	int j, buffer;
+	int j,m,n, buffer;
 	#ifdef DEBUG_MODE
 		printf("\n __reached start of shuffle \n ");
+		print_array(array);
 	#endif
-	if( array->len > 1){
+	if((array->len) > 1){
 		for(int i = 0; i < (array->len)-1; i++){
-			//j = i+1;
 			//j = i+1 + rand()%(array->len-1 - i); //my attempt
-			j = i + rand() / (RAND_MAX / (array->len - i) + 1); //ok google
-			//both on't work yet
-			buffer = array->values[i];
-			array->values[i] = array->values[j];
-			array->values[j] = buffer;
+			//j = i + rand() / (RAND_MAX / (array->len - i) + 1); //ok google
+			//both don't work 
+			m = rand()%(array->len);
+			n = rand()%(array->len);
+			buffer = array->values[m];
+			array->values[m] = array->values[n];
+			array->values[n] = buffer;
 		}
 	}
 	#ifdef DEBUG_MODE //not reached
@@ -70,13 +71,14 @@ ARRAY* shuffle(ARRAY* array){
 
 ARRAY* create_growing_array(unsigned int max){ //5 -> 0 1 2 3 4
 	//for saving indices and reshuffling rows and columns
-	ARRAY* ptr = (ARRAY*)malloc( sizeof(unsigned int) + sizeof(int)*max );
+	ARRAY* ptr = (ARRAY*)malloc( sizeof(unsigned int) + sizeof(unsigned int)*max );
 	if(ptr==NULL){
 		return NULL;
 	}
 	for( int i = 0; i<max; i++){
 		ptr->values[i]=i;
 	}
+	ptr->len = max;
 	#ifdef DEBUG_MODE
 		printf("__first and last elements of index array %d, %d ",ptr->values[0], ptr->values[max-1]);
 	#endif 
@@ -168,13 +170,48 @@ MAT* mat_shuffle(MAT* origin){ //
 	return result;
 }
 
-//MAT* mat_create_by_file(char* filename){
-//	
-//}
+/*
+MAT* mat_create_by_file(char* filename){
+	FILE* infile;
+	infile = fopen(filename, "wb+");
+	
+	MAT* ptr = (MAT*)malloc( sizeof(unsigned int)*2 + sizeof(int) );
+	if(ptr==NULL){
+		return NULL;
+	}
+	fread(ptr, sizeof(unsigned int), 2, infile);
+	printf("!!! %d, %d ", ptr->rows, ptr->cols);
+	
+	float* array_ptr = (float*)malloc( sizeof(float) * ptr->cols * ptr->rows );
+	if( array_ptr == NULL) {
+		free(ptr);
+		return NULL;
+	} //do not create a struct if not enough space for the array
+	
+	ptr->elem = array_ptr;
+	
+	fread(array_ptr, sizeof(float), ptr->cols * ptr->rows, infile);
+	
+	fclose(infile);
+	
+	return(ptr);
+}
 
-//char mat_save(MAT* mat, char* filename){
-//	
-//}
+char mat_save(MAT* mat, char* filename){
+	FILE* outfile;
+	outfile = fopen(filename, "wb");
+	if (outfile == NULL) {
+        printf("\nError with opening file\n");
+        return 0;
+    }
+	int result = fwrite(mat, sizeof(unsigned int), 2, outfile);
+	int result2 = fwrite(mat->elem, sizeof(float), (mat->cols) * (mat->rows), outfile);
+	fclose(outfile);
+	return 1;
+}
+
+*/
+
 
 void mat_destroy(MAT* mat){ //
 	free(mat->elem);
@@ -258,9 +295,9 @@ MAT* mat_create_triangular_det1(unsigned int rows, unsigned int cols){
 		#endif
 		ELEM(ptr,i,i) = new_rand;
 	}
-	ELEM(ptr, ((ptr->rows)-1), ((ptr->cols)-1)) = 1.0/fabs(accumulated_value); //this element is somehow incorrect = 0
+	ELEM(ptr, ((ptr->rows)-1), ((ptr->cols)-1)) = 1.0/fabs(accumulated_value); 
 	#ifdef DEBUG_MODE
-		printf(" %f | %f   ##  \n",accumulated_value, 1.0/fabs(accumulated_value)); //but here it is printed correctly
+		printf(" %f | %f   ##  \n",accumulated_value, 1.0/fabs(accumulated_value)); 
 	#endif
 	return ptr;
 }
@@ -353,10 +390,14 @@ int main(){
 	MAT* f = mat_row_operations(e); 
 	mat_print(f);
 	
-	//printf("\n Testing shuffle \n");
-	//MAT* g = mat_shuffle(f); 
-	//mat_print(g);
+	printf("\n Testing shuffle \n");
+	MAT* g = mat_shuffle(f); 
+	mat_print(g);
 
-		
+	printf("\n Saving to file and extracting \n");
+	mat_save(g, "matrix.bin");
+	MAT* recovered = mat_create_by_file("matrix.bin");
+	mat_print(recovered);
+	
 	//det values due to rounding -1.00003 0.999999 0.999992 0.999984
 }

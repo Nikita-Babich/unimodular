@@ -1,6 +1,10 @@
 # Task description
 Create a random square matrix with determinant +-1.
 
+#Properties
+1. Due to rounding error the actual determinant values are like this: -1.00003 0.999999 0.999992 0.999984
+2. A matrix with 0 at 0,0 place cannot be generated. But such matrices are "Negligibly small" compared to all unimodular matrices.
+
 # Algorithm
 ```mermaid
 flowchart TD
