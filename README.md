@@ -71,10 +71,13 @@ And a row swap\
 4 2.2 1.4\
 It can be checked, that the resulting matrix had a det=-1.\
 
+# For testing the results Wolfram Alpha is used. The output format is made such that matrix can be copypasted into Wolfram.
+
 # Current problems
-Indices 0,3 an 3,3 create zero elements instead of random.
-Sometimes segfaults.
-First couple elements of the diagonal are so big, that the 1/fabs(accumulated_value) is rounded down to 0.
+1. Indices 0,3 an 3,3 create zero elements instead of random. -- Problem disappeared before I reached it.
+2. First couple elements of the diagonal are so big, that the 1/fabs(accumulated_value) is rounded down to 0. -- Problem disappeared before I reached it.
+-- Problem disappeared before I reached it.
+3. 0.984375 - sometimes this number is the det of the matrix instead of 1 due to rounding error.
 
 
 

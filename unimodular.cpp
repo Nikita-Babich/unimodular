@@ -7,7 +7,7 @@
 #define nl printf("\n")
 #define ELEM(mat,i,j) (mat->elem)[i * (mat->cols) + j]
 
-//#define DEBUG_MODE //prints with __
+#define DEBUG_MODE //prints with __
 
 /* TODO
 	find "index 3,3 = 0" problem
@@ -252,27 +252,37 @@ MAT* mat_create_triangular_det1(unsigned int rows, unsigned int cols){
 		#endif
 		ELEM(ptr,i,i) = new_rand;
 	}
-	ELEM(ptr, (ptr->rows)-1, (ptr->cols)-1) = 1.0/fabs(accumulated_value); //this element is somehow incorrect = 0
+	ELEM(ptr, ((ptr->rows)-1), ((ptr->cols)-1)) = 1.0/fabs(accumulated_value); //this element is somehow incorrect = 0
 	#ifdef DEBUG_MODE
 		printf(" %f | %f   ##  \n",accumulated_value, 1.0/fabs(accumulated_value)); //but here it is printed correctly
 	#endif
 	return ptr;
 }
 
-void mat_print(MAT* mat){
+void mat_print(MAT* mat){ //format applicable for Wolfram Alpha
 	if (mat==NULL){
 		printf("\n The matrix is already deleted or was never successfully created");
 	}else{
 		printf("\n Matrix at 0x%.8X with sizes %d, %d", mat, mat->rows, mat->cols);
 		nl;
+		printf("{");
 		for(int i=0; i < mat->rows; i++){
+			printf("{");
 			for(int j=0; j < mat->cols; j++){
-				printf("\t%+10.2e", ELEM(mat,i,j));
+				printf("\t%f", ELEM(mat,i,j));
+				if (j != mat->cols - 1){
+					printf(", ");
+				}
 			}
-			nl;
+			printf("}");
+			if (i != mat->rows - 1){
+				printf(",");
+			}
+			 nl;
 		}
+		printf("}");
 		for(int i=0; i < mat->rows; i++){
-			printf("__________");
+			printf("\n__________");
 		}
 		nl;
 	}
@@ -348,4 +358,5 @@ int main(){
 	//mat_destroy(e); 
 	//mat_destroy(f);
 		
+	//worst case due to rounding 0.984375
 }
