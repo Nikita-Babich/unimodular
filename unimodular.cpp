@@ -8,7 +8,7 @@
 #define ELEM(mat,i,j) (mat->elem)[i * (mat->cols) + j]
 
 //#define DEBUG_MODE 
-#define FILEWORK
+//#define FILEWORK
 
 /* TODO
 	save and extract
@@ -298,15 +298,31 @@ float diag_det(MAT* mat){ //also works for triangular
 }
 
 #ifdef FILEWORK
-MAT* mat_create_by_file(char* filename){
+char mat_save(MAT* mat){
+	FILE* outfile;
+	outfile = fopen("matrix.bin", "wb");
+	if (outfile == NULL) {
+        printf("\nError with opening file\n");
+        return 0;
+    }
+	int result1 = fwrite(&(mat->rows), sizeof(unsigned int), 1, outfile);
+	int result2 = fwrite(&(mat->cols), sizeof(unsigned int), 1, outfile);
+	int result3 = fwrite(mat->elem, sizeof(float), (mat->cols) * (mat->rows), outfile);
+	fclose(outfile);
+	return (char)(result1*result2*result3);
+}
+
+MAT* mat_create_by_file(){
 	FILE* infile;
-	infile = fopen(filename, "wb+");
+	infile = fopen("matrix.bin", "wb+");
 	
-	MAT* ptr = (MAT*)malloc( sizeof(unsigned int)*2 + sizeof(int) );
+	MAT* ptr = (MAT*)malloc( sizeof(MAT) );
 	if(ptr==NULL){
 		return NULL;
 	}
-	fread(ptr, sizeof(unsigned int), 2, infile);
+	
+	fread(&(ptr->rows), sizeof(unsigned int), 1, infile);
+	fread(&(ptr->cols), sizeof(unsigned int), 1, infile);
 	printf("!!! %d, %d ", ptr->rows, ptr->cols);
 	
 	float* array_ptr = (float*)malloc( sizeof(float) * ptr->cols * ptr->rows );
@@ -322,19 +338,6 @@ MAT* mat_create_by_file(char* filename){
 	fclose(infile);
 	
 	return(ptr);
-}
-
-char mat_save(MAT* mat, char* filename){
-	FILE* outfile;
-	outfile = fopen(filename, "wb");
-	if (outfile == NULL) {
-        printf("\nError with opening file\n");
-        return 0;
-    }
-	int result = fwrite(mat, sizeof(unsigned int), 2, outfile);
-	int result2 = fwrite(mat->elem, sizeof(float), (mat->cols) * (mat->rows), outfile);
-	fclose(outfile);
-	return 1;
 }
 #endif
 
@@ -377,8 +380,8 @@ int main(){
 	
 	#ifdef FILEWORK
 	printf("\n Saving to file and extracting \n");
-	mat_save(g, "matrix.bin");
-	MAT* recovered = mat_create_by_file("matrix.bin");
+	mat_save(g);
+	MAT* recovered = mat_create_by_file();
 	mat_print(recovered);
 	#endif
 	//det values due to rounding -1.00003 0.999999 0.999992 0.999984 1. -0.999841
