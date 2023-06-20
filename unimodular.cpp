@@ -7,10 +7,11 @@
 #define nl printf("\n")
 #define ELEM(mat,i,j) (mat->elem)[i * (mat->cols) + j]
 
-#define DEBUG_MODE 
+//#define DEBUG_MODE 
+#define FILEWORK
 
 /* TODO
-
+	save and extract
 */
 
 typedef struct{ //for matrices
@@ -170,49 +171,6 @@ MAT* mat_shuffle(MAT* origin){ //
 	return result;
 }
 
-/*
-MAT* mat_create_by_file(char* filename){
-	FILE* infile;
-	infile = fopen(filename, "wb+");
-	
-	MAT* ptr = (MAT*)malloc( sizeof(unsigned int)*2 + sizeof(int) );
-	if(ptr==NULL){
-		return NULL;
-	}
-	fread(ptr, sizeof(unsigned int), 2, infile);
-	printf("!!! %d, %d ", ptr->rows, ptr->cols);
-	
-	float* array_ptr = (float*)malloc( sizeof(float) * ptr->cols * ptr->rows );
-	if( array_ptr == NULL) {
-		free(ptr);
-		return NULL;
-	} //do not create a struct if not enough space for the array
-	
-	ptr->elem = array_ptr;
-	
-	fread(array_ptr, sizeof(float), ptr->cols * ptr->rows, infile);
-	
-	fclose(infile);
-	
-	return(ptr);
-}
-
-char mat_save(MAT* mat, char* filename){
-	FILE* outfile;
-	outfile = fopen(filename, "wb");
-	if (outfile == NULL) {
-        printf("\nError with opening file\n");
-        return 0;
-    }
-	int result = fwrite(mat, sizeof(unsigned int), 2, outfile);
-	int result2 = fwrite(mat->elem, sizeof(float), (mat->cols) * (mat->rows), outfile);
-	fclose(outfile);
-	return 1;
-}
-
-*/
-
-
 void mat_destroy(MAT* mat){ //
 	free(mat->elem);
 	free(mat);
@@ -308,11 +266,11 @@ void mat_print(MAT* mat){ //format applicable for Wolfram Alpha
 	}else{
 		printf("\n Matrix at 0x%.8X with sizes %d, %d", mat, mat->rows, mat->cols);
 		nl;
-		printf("{");
+		printf("{\n");
 		for(int i=0; i < mat->rows; i++){
 			printf("{");
 			for(int j=0; j < mat->cols; j++){
-				printf("\t%f", ELEM(mat,i,j));
+				printf("%3.8f", ELEM(mat,i,j));
 				if (j != mat->cols - 1){
 					printf(", ");
 				}
@@ -324,9 +282,6 @@ void mat_print(MAT* mat){ //format applicable for Wolfram Alpha
 			 nl;
 		}
 		printf("}");
-		for(int i=0; i < mat->rows; i++){
-			printf("\n__________");
-		}
 		nl;
 	}
 }
@@ -342,20 +297,46 @@ float diag_det(MAT* mat){ //also works for triangular
 	return answer;
 }
 
-/*
-float det(MAT* mat){ //may be not needed 
-	//must recieve square matrix
-	//row reduction algorithm, to upper triangular
-	int size = mat->rows;
-	compare each string with 0th (
-	compare each string from i=2 with i=1
+#ifdef FILEWORK
+MAT* mat_create_by_file(char* filename){
+	FILE* infile;
+	infile = fopen(filename, "wb+");
 	
-	for(int j=0; j<size-1; j++){
-		ELEM(mat,i,j)
+	MAT* ptr = (MAT*)malloc( sizeof(unsigned int)*2 + sizeof(int) );
+	if(ptr==NULL){
+		return NULL;
 	}
-	return diag_det(mat);
+	fread(ptr, sizeof(unsigned int), 2, infile);
+	printf("!!! %d, %d ", ptr->rows, ptr->cols);
+	
+	float* array_ptr = (float*)malloc( sizeof(float) * ptr->cols * ptr->rows );
+	if( array_ptr == NULL) {
+		free(ptr);
+		return NULL;
+	} //do not create a struct if not enough space for the array
+	
+	ptr->elem = array_ptr;
+	
+	fread(array_ptr, sizeof(float), ptr->cols * ptr->rows, infile);
+	
+	fclose(infile);
+	
+	return(ptr);
 }
-*/
+
+char mat_save(MAT* mat, char* filename){
+	FILE* outfile;
+	outfile = fopen(filename, "wb");
+	if (outfile == NULL) {
+        printf("\nError with opening file\n");
+        return 0;
+    }
+	int result = fwrite(mat, sizeof(unsigned int), 2, outfile);
+	int result2 = fwrite(mat->elem, sizeof(float), (mat->cols) * (mat->rows), outfile);
+	fclose(outfile);
+	return 1;
+}
+#endif
 
 int main(){
 	srand(time(NULL));
@@ -393,11 +374,12 @@ int main(){
 	printf("\n Testing shuffle \n");
 	MAT* g = mat_shuffle(f); 
 	mat_print(g);
-
+	
+	#ifdef FILEWORK
 	printf("\n Saving to file and extracting \n");
 	mat_save(g, "matrix.bin");
 	MAT* recovered = mat_create_by_file("matrix.bin");
 	mat_print(recovered);
-	
-	//det values due to rounding -1.00003 0.999999 0.999992 0.999984
+	#endif
+	//det values due to rounding -1.00003 0.999999 0.999992 0.999984 1. -0.999841
 }
