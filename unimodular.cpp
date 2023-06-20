@@ -36,10 +36,12 @@ void print_array(ARRAY* array){
 }
 
 float rand_nonzero_float(void){ //used at creation and at row operations
-	float result = fmod((float)rand(),10);	//limited by 10 to prevent small number representation problem in division for the last element in mat_create_triangular_det1
-	if( result==0 ){ result = 1; }
+	float result = fmod((float)rand(),10.0) * (rand()%2 ? 1 : -1);	
+	//limited by 10 to prevent small number representation problem in division for the last element in mat_create_triangular_det1
+	if( result==0 ){ 
+		result = 1; 
+	}
 	return result; 
-
 }
 
 ARRAY* shuffle(ARRAY* array){ 
@@ -51,13 +53,10 @@ ARRAY* shuffle(ARRAY* array){
 	#endif
 	if( array->len > 1){
 		for(int i = 0; i < (array->len)-1; i++){
-			j = i+1;
-			//j = i+1 + rand()%(array->len-1 - i); //my attampt
-			//j = i + rand() / (RAND_MAX / (array->len - i) + 1); //ok google
-			/*
-				i+1 because j is at least the next member, 
-				array->len-1 - i is the distance to the end from the first possible j
-			*/
+			//j = i+1;
+			//j = i+1 + rand()%(array->len-1 - i); //my attempt
+			j = i + rand() / (RAND_MAX / (array->len - i) + 1); //ok google
+			//both on't work yet
 			buffer = array->values[i];
 			array->values[i] = array->values[j];
 			array->values[j] = buffer;
@@ -72,6 +71,9 @@ ARRAY* shuffle(ARRAY* array){
 ARRAY* create_growing_array(unsigned int max){ //5 -> 0 1 2 3 4
 	//for saving indices and reshuffling rows and columns
 	ARRAY* ptr = (ARRAY*)malloc( sizeof(unsigned int) + sizeof(int)*max );
+	if(ptr==NULL){
+		return NULL;
+	}
 	for( int i = 0; i<max; i++){
 		ptr->values[i]=i;
 	}
@@ -84,8 +86,14 @@ ARRAY* create_growing_array(unsigned int max){ //5 -> 0 1 2 3 4
 MAT* mat_create_with_type(unsigned int rows, unsigned int cols){ 
 	//Can ptr still be NULL after typecasting?
 	float* array_ptr = (float*)malloc( sizeof(float)*cols*rows );
-	if( array_ptr == NULL) {return NULL;} //do not create a struct if not enough space for the array
+	if( array_ptr == NULL) {
+		return NULL;
+	} //do not create a struct if not enough space for the array
 	MAT* ptr = (MAT*)malloc( sizeof(unsigned int)*2 + sizeof(int) );
+	if(ptr==NULL){
+		free(array_ptr);
+		return NULL;
+	}
 	ptr->rows = rows;
 	ptr->cols = cols;
 	ptr->elem = array_ptr;
@@ -93,16 +101,9 @@ MAT* mat_create_with_type(unsigned int rows, unsigned int cols){
 }
 
 MAT* mat_copy(MAT* mat){ //
-	float* array_ptr = (float*)malloc( sizeof(float) * mat->cols * mat->rows );
-	/*
-	if( array_ptr == NULL){ //do not create a struct if not enough space for the array
-		return NULL;
-	} 
-	*/
-	MAT* ptr = (MAT*)malloc( sizeof(unsigned int)*2 + sizeof(int) );
+	MAT* ptr = mat_create_with_type(mat->rows, mat->cols);
 	ptr->rows = mat->rows;
 	ptr->cols = mat->cols;
-	ptr->elem = array_ptr;
 	for( int i = 0; i<ptr->rows; i++){
 		for( int j = 0; j<ptr->cols; j++){
 			ELEM(ptr,i,j) = ELEM(mat,i,j);
@@ -156,7 +157,9 @@ MAT* mat_shuffle(MAT* origin){ //
 	ARRAY* row_indices = shuffle(create_growing_array(rows));
 	ARRAY* col_indices = shuffle(create_growing_array(cols));
 	MAT* result = mat_copy(origin);
-	
+	if(row_indices==NULL or col_indices==NULL or result==NULL){
+		return NULL;
+	}
 	for(int i = 0; i < rows; i++){
 		for(int j = 0; j < cols; j++){
 			ELEM(result,i,j) = ELEM(origin, (row_indices->values[i]), (col_indices->values[j]) );
@@ -214,7 +217,7 @@ void mat_unit(MAT* mat){
 MAT* rand_above_diag(MAT* mat){
 	for(int i=0; i < mat->rows; i++){	
 		for(int j=i+1; j < mat->cols; j++){
-			ELEM(mat,i,j) = (float)rand();
+			ELEM(mat,i,j) = rand_nonzero_float(); // (float)rand(); //-old version, imprecise
 		}
 	}
 	return mat;
@@ -240,6 +243,9 @@ void mat_random(MAT* mat){
 MAT* mat_create_triangular_det1(unsigned int rows, unsigned int cols){
 	if(rows!=cols){ printf("error"); return NULL; }
 	MAT* ptr = mat_create_with_type(rows, cols);
+	if(ptr==NULL){
+		return NULL;
+	}
 	ptr = rand_above_diag(ptr);
 	ptr = zeros_under_diag(ptr);
 	float accumulated_value = 1;
@@ -314,10 +320,6 @@ float det(MAT* mat){ //may be not needed
 }
 */
 
-//MAT* mat_row_operations(){
-//	
-//}
-
 int main(){
 	srand(time(NULL));
 	
@@ -351,12 +353,10 @@ int main(){
 	MAT* f = mat_row_operations(e); 
 	mat_print(f);
 	
-	printf("\n Testing shuffle \n");
+	//printf("\n Testing shuffle \n");
 	//MAT* g = mat_shuffle(f); 
 	//mat_print(g);
-	
-	//mat_destroy(e); 
-	//mat_destroy(f);
+
 		
-	//worst case due to rounding 0.984375
+	//det values due to rounding -1.00003 0.999999 0.999992 0.999984
 }
