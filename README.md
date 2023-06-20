@@ -7,7 +7,7 @@ Create a random square matrix with determinant +-1.
 
 # Algorithm
 ```mermaid
-flowchart LR
+flowchart TD
 
 Start --> id1(Create a matrix)
 id1 --> id2(Fill numbers under the diagonal with zeros)
