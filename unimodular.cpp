@@ -8,7 +8,7 @@
 #define ELEM(mat,i,j) (mat->elem)[i * (mat->cols) + j]
 
 //#define DEBUG_MODE 
-//#define FILEWORK
+#define FILEWORK
 
 /* TODO
 	save and extract
@@ -314,7 +314,7 @@ char mat_save(MAT* mat){
 
 MAT* mat_create_by_file(){
 	FILE* infile;
-	infile = fopen("matrix.bin", "wb+");
+	infile = fopen("matrix.bin", "rb+");
 	
 	MAT* ptr = (MAT*)malloc( sizeof(MAT) );
 	if(ptr==NULL){
@@ -361,11 +361,6 @@ int main(){
 	mat_destroy(c);
 	mat_destroy(b);
 	
-	printf("\n Testing creation with det=+-1 \n");
-	MAT* d = mat_create_triangular_det1(4,4);
-	mat_print(d);
-	mat_destroy(d);
-	
 	printf("\n Testing smaller \n");
 	MAT* e = mat_create_triangular_det1(3,3);
 	mat_print(e);
@@ -377,6 +372,20 @@ int main(){
 	printf("\n Testing shuffle \n");
 	MAT* g = mat_shuffle(f); 
 	mat_print(g);
+	
+	
+	printf("\n Testing bigger \n");
+	MAT* h = mat_create_triangular_det1(4,4);
+	mat_print(h);
+	
+	printf("\n Testing row operations \n");
+	MAT* k = mat_row_operations(h); 
+	mat_print(k);
+	
+	printf("\n Testing shuffle \n");
+	MAT* l = mat_shuffle(k); 
+	mat_print(l);
+
 	
 	#ifdef FILEWORK
 	printf("\n Saving to file and extracting \n");
